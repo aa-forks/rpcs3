@@ -6,6 +6,7 @@
 #include "Emu/system_config.h"
 
 #include <unordered_set>
+#include "Emu/Cell/lv2/sys_memory.h"
 #include "util/yaml.hpp"
 #include "util/asm.hpp"
 
@@ -817,7 +818,7 @@ void ppu_module::analyse(u32 lib_toc, u32 entry, const u32 sec_end, const std::b
 				}
 
 				// TODO: absolute/relative offset (approximation)
-				if (addr > 0xc0000000)
+				if (addr > mem_rsx_base)
 				{
 					addr += ptr.addr() + 8;
 				}

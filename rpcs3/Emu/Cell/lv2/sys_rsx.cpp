@@ -116,9 +116,12 @@ error_code sys_rsx_memory_allocate(cpu_thread& cpu, vm::ptr<u32> mem_handle, vm:
 
 	sys_rsx.warning("sys_rsx_memory_allocate(mem_handle=*0x%x, mem_addr=*0x%x, size=0x%x, flags=0x%llx, a5=0x%llx, a6=0x%llx, a7=0x%llx)", mem_handle, mem_addr, size, flags, a5, a6, a7);
 
-	if (u32 addr = vm::falloc(rsx::constants::local_mem_base, size, vm::video))
+	if (u32 addr = vm::falloc(rsx::constants::local_mem_base, mem_rsx_size, vm::video))
 	{
-		rsx::get_current_renderer()->local_mem_size = size;
+		rsx::get_current_renderer()->local_mem_size = mem_rsx_size;
+		// rsx::get_current_renderer()->local_mem_size = size;
+		// from patch
+		// g_fxo->get<lv2_rsx_config>()->memory_size = mem_rsx_size;
 		*mem_addr = addr;
 		*mem_handle = 0x5a5a5a5b;
 		return CELL_OK;
@@ -240,11 +243,17 @@ error_code sys_rsx_context_allocate(cpu_thread& cpu, vm::ptr<u32> context_id, vm
 	dmaControl.put = 0;
 	dmaControl.ref = 0; // Set later to -1 by cellGcmSys
 
-	if ((false/*system_mode & something*/ || g_cfg.video.decr_memory_layout)
-		&& g_cfg.core.debug_console_mode)
-		rsx::get_current_renderer()->main_mem_size = 0x20000000; //512MB
-	else
-		rsx::get_current_renderer()->main_mem_size = 0x10000000; //256MB
+// <<<<<<< HEAD
+// 	if ((false/*system_mode & something*/ || g_cfg.video.decr_memory_layout)
+// 		&& g_cfg.core.debug_console_mode)
+// 		rsx::get_current_renderer()->main_mem_size = 0x20000000; //512MB
+// 	else
+// 		rsx::get_current_renderer()->main_mem_size = 0x10000000; //256MB
+// =======
+	// memset(&RSXIOMem, 0xFF, sizeof(RSXIOMem));
+
+	rsx::get_current_renderer()->main_mem_size = mem_user1m_size;
+// >>>>>>> f1f5b9ea2 (increased both main and RSX memory to 512 MB)
 
 	vm::var<sys_event_queue_attribute_t, vm::page_allocator<>> attr;
 	attr->protocol = SYS_SYNC_PRIORITY;

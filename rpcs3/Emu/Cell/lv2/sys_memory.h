@@ -3,6 +3,11 @@
 #include "Emu/Memory/vm_ptr.h"
 #include "Emu/Cell/ErrorCodes.h"
 
+static constexpr u64 mem_user64k_base = 0x20000000, mem_user64k_size = 0x10000000;
+static constexpr u64 mem_user1m_size = 0x20000000;
+static constexpr u64 mem_stack_base = 0xA0000000, mem_stack_size = 0x10000000;
+static constexpr u64 mem_rsx_base = 0xC0000000, mem_rsx_size = 0x20000000;
+
 class cpu_thread;
 
 enum lv2_mem_container_id : u32

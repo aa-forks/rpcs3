@@ -1737,7 +1737,7 @@ bool ppu_load_exec(const ppu_exec_object& elf)
 		}
 
 		// Additional segment for fixed allocations
-		if (!vm::map(0x30000000, 0x10000000, 0x200))
+		if (!vm::map(0x30000000, mem_user1m_size, 0x200))
 		{
 			fmt::throw_exception("Failed to map ppc_seg's segment!");
 		}
@@ -1840,7 +1840,7 @@ bool ppu_load_exec(const ppu_exec_object& elf)
 		mem_size += 0xC000000;
 	}
 
-	g_fxo->init<lv2_memory_container>(mem_size)->used += primary_stacksize;
+	g_fxo->init<lv2_memory_container>(mem_user1m_size)->used += primary_stacksize;
 
 	ppu->cmd_push({ppu_cmd::initialize, 0});
 

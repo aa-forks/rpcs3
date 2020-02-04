@@ -1486,14 +1486,19 @@ namespace vm
 
 	static std::shared_ptr<block_t> _find_map(u32 size, u32 align, u64 flags)
 	{
-		const u32 max = (0xC0000000 - size) & (0 - align);
+// <<<<<<< HEAD
+// idk if this will work
+		// const u32 max = (0xC0000000 - size) & (0 - align);
 
-		if (size > 0xC0000000 - 0x20000000 || max < 0x20000000)
-		{
-			return nullptr;
-		}
+		// if (size > 0xC0000000 - 0x20000000 || max < 0x20000000)
+		// {
+		// 	return nullptr;
+		// }
 
-		for (u32 addr = utils::align<u32>(0x20000000, align);; addr += align)
+		// for (u32 addr = utils::align<u32>(0x20000000, align);; addr += align)
+// =======
+		for (u32 addr = utils::align<u32>(mem_user64k_base, align); addr - 1 < mem_rsx_base - 1; addr += align)
+// >>>>>>> f1f5b9ea2 (increased both main and RSX memory to 512 MB)
 		{
 			if (_test_map(addr, size))
 			{
@@ -1747,13 +1752,32 @@ namespace vm
 
 			g_locations =
 			{
-				std::make_shared<block_t>(0x00010000, 0x1FFF0000, page_size_64k | preallocated), // main
-				std::make_shared<block_t>(0x20000000, 0x10000000, page_size_64k | bf0_0x1),		 // user 64k pages
-				nullptr,                                                                         // user 1m pages
-				nullptr,                                                                         // rsx context
-				std::make_shared<block_t>(0xC0000000, 0x10000000, page_size_64k | preallocated), // video
-				std::make_shared<block_t>(0xD0000000, 0x10000000, page_size_4k  | preallocated | stack_guarded | bf0_0x1), // stack
-				std::make_shared<block_t>(0xE0000000, 0x20000000, page_size_64k),                // SPU reserved
+// <<<<<<< HEAD
+// 				std::make_shared<block_t>(0x00010000, 0x1FFF0000, page_size_64k | preallocated), // main
+// 				std::make_shared<block_t>(0x20000000, 0x10000000, page_size_64k | bf0_0x1),		 // user 64k pages
+// 				nullptr,                                                                         // user 1m pages
+// 				nullptr,                                                                         // rsx context
+// 				std::make_shared<block_t>(0xC0000000, 0x10000000, page_size_64k | preallocated), // video
+// 				std::make_shared<block_t>(0xD0000000, 0x10000000, page_size_4k  | preallocated | stack_guarded | bf0_0x1), // stack
+// 				std::make_shared<block_t>(0xE0000000, 0x20000000, page_size_64k),                // SPU reserved
+// =======
+// 				std::make_shared<block_t>(0x00010000, 0x1FFF0000, 0x200), // main (TEXT_SEGMENT_BASE_ADDR)
+// 			    std::make_shared<block_t>(mem_user64k_base, mem_user64k_size, 0x201), // user 64k pages
+// 				nullptr, // user 1m pages (OVERLAY_PPU_SPU_SHARED_SEGMENT_BASE_ADDR)
+// 			    nullptr, // rsx context
+// 				std::make_shared<block_t>(mem_rsx_base, mem_rsx_size), // video (RSX_FB_BASE_ADDR)
+// 			    std::make_shared<block_t>(mem_stack_base, mem_stack_size, 0x111), // stack
+// 				std::make_shared<block_t>(0xE0000000, 0x20000000), // SPU reserved (RAW_SPU_BASE_ADDR)
+
+
+				std::make_shared<block_t>(0x00010000, 0x1FFF0000, 0x200), // main (TEXT_SEGMENT_BASE_ADDR)
+			    std::make_shared<block_t>(mem_user64k_base, mem_user64k_size, 0x201), // user 64k pages
+				nullptr, // user 1m pages (OVERLAY_PPU_SPU_SHARED_SEGMENT_BASE_ADDR)
+			    nullptr, // rsx context
+				std::make_shared<block_t>(mem_rsx_base, mem_rsx_size), // video (RSX_FB_BASE_ADDR)
+			    std::make_shared<block_t>(mem_stack_base, mem_stack_size, 0x111), // stack
+				std::make_shared<block_t>(0xE0000000, 0x20000000), // SPU reserved (RAW_SPU_BASE_ADDR)
+// >>>>>>> f1f5b9ea2 (increased both main and RSX memory to 512 MB)
 			};
 
 			std::memset(g_reservations, 0, sizeof(g_reservations));

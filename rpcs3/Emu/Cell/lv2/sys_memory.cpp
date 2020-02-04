@@ -64,7 +64,7 @@ error_code sys_memory_allocate(cpu_thread& cpu, u32 size, u64 flags, vm::ptr<u32
 		return CELL_ENOMEM;
 	}
 
-	if (const auto area = vm::reserve_map(align == 0x10000 ? vm::user64k : vm::user1m, 0, utils::align(size, 0x10000000), 0x401))
+	if (const auto area = vm::reserve_map(align == 0x10000 ? vm::user64k : vm::user1m, 0, align == 0x10000 ? utils::align(size, 0x10000000) : mem_user1m_size, 0x401))
 	{
 		if (const u32 addr = area->alloc(size, nullptr, align))
 		{

@@ -23,7 +23,7 @@ namespace rsx
 		}
 
 		// User memory + fifo size
-		buffer_size = utils::align<u32>(buffer_size, 0x100000) + 0x10000000;
+		buffer_size = utils::align<u32>(buffer_size, 0x100000) + mem_rsx_size;
 		// We are not allowed to drain all memory so add a little
 		g_fxo->init<lv2_memory_container>(buffer_size + 0x1000000);
 
@@ -39,7 +39,7 @@ namespace rsx
 		if (sys_rsx_device_map(*this, contextInfo.ptr(&rsx_context::dev_addr), vm::null, 0x8) != CELL_OK)
 			fmt::throw_exception("Capture Replay: sys_rsx_device_map failed!");
 
-		if (sys_rsx_memory_allocate(*this, contextInfo.ptr(&rsx_context::mem_handle), contextInfo.ptr(&rsx_context::mem_addr), 0x0F900000, 0, 0, 0, 0) != CELL_OK)
+		if (sys_rsx_memory_allocate(*this, contextInfo.ptr(&rsx_context::mem_handle), contextInfo.ptr(&rsx_context::mem_addr), mem_rsx_size, 0, 0, 0, 0) != CELL_OK)
 			fmt::throw_exception("Capture Replay: sys_rsx_memory_allocate failed!");
 
 		if (sys_rsx_context_allocate(*this, contextInfo.ptr(&rsx_context::context_id), contextInfo.ptr(&rsx_context::dma_addr), contextInfo.ptr(&rsx_context::driver_info), contextInfo.ptr(&rsx_context::reports_addr), contextInfo->mem_handle, 0) != CELL_OK)
