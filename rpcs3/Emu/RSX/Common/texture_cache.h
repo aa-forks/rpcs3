@@ -2089,6 +2089,8 @@ namespace rsx
 
 			const bool is_unnormalized = !!(tex.format() & CELL_GCM_TEXTURE_UN);
 			auto extended_dimension = tex.get_extended_texture_dimension();
+			if (extended_dimension == rsx::texture_dimension_extended::texture_dimension_3d && tex.depth() == 1 && (tex.width() > 2048 || tex.height() > 2048))
+				extended_dimension = rsx::texture_dimension_extended::texture_dimension_2d;
 
 			options.is_compressed_format = helpers::is_compressed_gcm_format(attributes.gcm_format);
 
