@@ -1767,7 +1767,7 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		SubscribeTooltip(ui->cb_show_pup_install, tooltips.settings.show_pup_install);
 		SubscribeTooltip(ui->cb_show_obsolete_cfg_dialog, tooltips.settings.show_obsolete_cfg);
 		SubscribeTooltip(ui->cb_show_same_buttons_dialog, tooltips.settings.show_same_buttons);
-		SubscribeTooltip(ui->gb_updates, tooltips.settings.check_update_start);
+		// SubscribeTooltip(ui->gb_updates, tooltips.settings.check_update_start);
 
 		// Discord:
 		SubscribeTooltip(ui->useRichPresence, tooltips.settings.use_rich_presence);
@@ -1849,7 +1849,7 @@ settings_dialog::settings_dialog(std::shared_ptr<gui_settings> gui_settings, std
 		ui->combo_updates->setCurrentIndex(ui->combo_updates->findData(m_gui_settings->GetValue(gui::m_check_upd_start).toString()));
 		connect(ui->combo_updates, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int index)
 		{
-			if (index >= 0) m_gui_settings->SetValue(gui::m_check_upd_start, ui->combo_updates->itemData(index));
+			// if (index >= 0) m_gui_settings->SetValue(gui::m_check_upd_start, ui->combo_updates->itemData(index));
 		});
 
 		const bool enable_ui_colors = m_gui_settings->GetValue(gui::m_enableUIColors).toBool();

@@ -221,12 +221,14 @@ bool main_window::Init(bool with_cli_boot)
 
 	QAction *download_action = new QAction(tr("Download Update"), download_menu);
 	connect(download_action, &QAction::triggered, this, [this]
+#if defined(_WIN32) || defined(__linux__)
+	if (m_gui_settings->GetValue(gui::m_check_upd_start).toBool())
 	{
+		/*
 		m_updater.update(false);
+		*/
 	});
-
 	download_menu->addAction(download_action);
-
 #ifdef _WIN32
 	// Use a menu at the top right corner to indicate the new version.
 	QMenuBar *corner_bar = new QMenuBar(ui->menuBar);
@@ -262,7 +264,6 @@ bool main_window::Init(bool with_cli_boot)
 		m_updater.check_for_updates(true, in_background, auto_accept, this);
 	}
 #endif
-
 	// Disable vsh if not present.
 	ui->bootVSHAct->setEnabled(fs::is_file(g_cfg_vfs.get_dev_flash() + "vsh/module/vsh.self"));
 
@@ -2373,11 +2374,11 @@ void main_window::CreateConnects()
 
 	connect(ui->updateAct, &QAction::triggered, this, [this]()
 	{
-#if !defined(_WIN32) && !defined(__linux__)
+// #if !defined(_WIN32) && !defined(__linux__)
 		QMessageBox::warning(this, tr("Auto-updater"), tr("The auto-updater currently isn't available for your os."));
 		return;
-#endif
-		m_updater.check_for_updates(false, false, false, this);
+// #endif
+		// m_updater.check_for_updates(false, false, false, this);
 	});
 
 	connect(ui->aboutAct, &QAction::triggered, this, [this]
