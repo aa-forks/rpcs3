@@ -220,13 +220,15 @@ bool main_window::Init(bool with_cli_boot)
 	QMenu* download_menu = new QMenu(tr("Update Available!"));
 
 	QAction *download_action = new QAction(tr("Download Update"), download_menu);
-	connect(download_action, &QAction::triggered, this, [this]
-#if defined(_WIN32) || defined(__linux__)
-	if (m_gui_settings->GetValue(gui::m_check_upd_start).toBool())
-	{
-		/*
-		m_updater.update(false);
-		*/
+	connect(download_action, &QAction::triggered, this, [this]{
+	#if defined(_WIN32) || defined(__linux__)
+		if (m_gui_settings->GetValue(gui::m_check_upd_start).toBool())
+		{
+			/*
+			m_updater.update(false);
+			*/
+		}
+	#endif
 	});
 	download_menu->addAction(download_action);
 #ifdef _WIN32
