@@ -300,7 +300,7 @@ namespace vm
 		}
 
 		// Limit to <512 MiB at once; make sure if it operates on big amount of data, it's page-aligned
-		if (size >= 512 * 1024 * 1024 || (size > 65536 && size % 4096))
+		if (/*size >= 512 * 1024 * 1024 || */(size > 65536 && size % 4096))
 		{
 			fmt::throw_exception("Failed to lock range (flags=0x%x, addr=0x%x, size=0x%x)", flags >> 32, addr, size);
 		}
