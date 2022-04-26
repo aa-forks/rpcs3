@@ -31,6 +31,7 @@
 *.wav
 
 /build
+/rpcs3_build
 /lib
 /tmp
 /ipch
